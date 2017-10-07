@@ -111,4 +111,65 @@ To add a manager to this swarm, run 'docker swarm join-token manager' and follow
                                                                                                                                              
                                                                                                                                              
 Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                      
-$                                                                                                                                            
+$                                        
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)
+$ docker swarm join-token manager
+To add a manager to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-0etn64puo2bv6fs9lw87fytk8sl8u8s7zxdd1l8plm7q6isj5l-9yuyeouk0g5r9nb0mym6wzvqx 192.168.99.105:2377
+
+$ docker swarm join-token worker
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-0etn64puo2bv6fs9lw87fytk8sl8u8s7zxdd1l8plm7q6isj5l-9981lu2143cnxgofi7qgbhdei 192.168.99.105:2377
+
+
+
+$ JOIN_TOKEN=$(docker swarm join-token worker)                                                                                                                   	
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$ echo JOIN_TOKEN                                                                                                                                                
+JOIN_TOKEN                                                                                                                                                       
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$ echo $JOIN_TOKEN                                                                                                                                               
+To add a worker to this swarm, run the following command: docker swarm join --token SWMTKN-1-0etn64puo2bv6fs9lw87fytk8sl8u8s7zxdd1l8plm7q6isj5l-9981lu2143cnxgofi
+7qgbhdei 192.168.99.105:2377                                                                                                                                     
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$ docker swarm join-token --help                                                                                                                                 
+                                                                                                                                                                 
+Usage:  docker swarm join-token [OPTIONS] (worker|manager)                                                                                                       
+                                                                                                                                                                 
+Manage join tokens                                                                                                                                               
+                                                                                                                                                                 
+Options:                                                                                                                                                         
+      --help     Print usage                                                                                                                                     
+  -q, --quiet    Only display token                                                                                                                              
+      --rotate   Rotate join token                                                                                                                               
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$ JOIN_TOKEN=$(docker swarm join-token -q worker)                                                                                                                
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$ echo $JOIN_TOKEN                                                                                                                                               
+SWMTKN-1-0etn64puo2bv6fs9lw87fytk8sl8u8s7zxdd1l8plm7q6isj5l-9981lu2143cnxgofi7qgbhdei                                                                            
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                          
+$                                                                                                                                                                
+                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                                                                                                                                                                                    
+$ docker-machine ls                                                                                       
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS        
+default   -        virtualbox   Running   tcp://192.168.99.100:2376           v17.07.0-ce                 
+swarm-1   *        virtualbox   Running   tcp://192.168.99.105:2376           v17.09.0-ce                 
+swarm-2   -        virtualbox   Running   tcp://192.168.99.106:2376           v17.09.0-ce                 
+swarm-3   -        virtualbox   Running   tcp://192.168.99.107:2376           v17.09.0-ce                 
+                                                                                                          
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.2 (master)                   
+$ docker node ls                                                                                          
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS  
+yecar1k1724th4e6ws8msk07i *   swarm-1             Ready               Active              Leader          
+        
+		
