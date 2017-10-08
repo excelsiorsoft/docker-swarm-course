@@ -29,3 +29,6 @@ $ curl $(docker-machine ip swarm-3):8080
 The hostname is a00237d05ad4!
 $
 ```
+These services are also replicateable via `docker service scale docker-routing-mesh=10`:
+
+![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/replicated%20services.PNG)
