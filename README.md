@@ -16,6 +16,11 @@ Couple of services running in a cluster (from Chapter 2):
 
 are accessible on all cluster nodes:
 ```
+$ docker service ls
+ID                  NAME                      MODE                REPLICAS            IMAGE                                     PORTS
+3x1onmfsfgk1        visualizer                replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp
+xum6cp7s3g69        docker-routing-mesh-svc   replicated          1/1                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp
+
 $ curl $(docker-machine ip swarm-1):8080
 The hostname is a00237d05ad4!
 $ curl $(docker-machine ip swarm-2):8080
