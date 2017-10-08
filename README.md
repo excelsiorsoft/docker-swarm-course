@@ -9,3 +9,5 @@ My own chapter notes are added to the corresponding folders as `my-notes.txt` fi
 The author also has a [repo with similar contents](https://github.com/albertogviana/docker-swarm-presentation).
 
 Docker Swarm Visualizer is described in more details [here](https://github.com/dockersamples/docker-swarm-visualizer).
+
+![Couple of services running in a cluster (in Chapter 2)](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/services-deployed-in-a-swarm.PNG)
