@@ -410,7 +410,28 @@ Same resulting page would show for: http://192.168.99.118:8000/  and http://192.
 
 This is Docker routing mesh in action - requests are redirected to the proper node across the cluster.
 
+Networking
 
-  
-
-                                                                                                            
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ docker network ls                                                                          
+NETWORK ID          NAME                DRIVER              SCOPE                          
+34277665e0f5        bridge              bridge              local                                                                                                                                      
+f570021927e0        docker_gwbridge     bridge              local                          
+524c6d12d59f        host                host                local                          
+r8p37o09u0pq        ingress             overlay             swarm                          
+00e1c720006c        none                null                local                          
+                                                                                           
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ docker network create -d overlay routing-mesh                                            
+8y6zp1mw8bbyo1lyuyl0uf3o0                                                                  
+                                                                                           
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ docker network ls                                                                        
+NETWORK ID          NAME                DRIVER              SCOPE                          
+34277665e0f5        bridge              bridge              local                          
+f570021927e0        docker_gwbridge     bridge              local                          
+524c6d12d59f        host                host                local                          
+r8p37o09u0pq        ingress             overlay             swarm                          
+00e1c720006c        none                null                local                          
+8y6zp1mw8bby        routing-mesh        overlay             swarm                          
+                                                                                           
