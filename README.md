@@ -87,3 +87,6 @@ ve0ulvyhsz47        docker-routing-mesh   replicated          0/0               
 ```
 ![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/visualizer%2Bredis.PNG)
                                                                                                                                                                                  
+Chapter 3 deploys a Go application onto the Docker Swarm in the following setup:
+
+![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-3/application%20cluster.PNG)
