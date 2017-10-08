@@ -1028,4 +1028,18 @@ Commercial support is available at
 </body>                                                                                
 </html>                                                                                
   
+$ docker service ls
+ID                  NAME                  MODE                REPLICAS            IMAGE                                     PORTS
+at2le0hlbpxs        visualizer            replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp
+kr1tt3bhhhdl        nginx                 replicated          1/1                 nginx:latest                              *:80->80/tcp
+ve0ulvyhsz47        docker-routing-mesh   replicated          0/0                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp
+
+$ docker service rm nginx
+nginx
+
+$ docker service ls
+ID                  NAME                  MODE                REPLICAS            IMAGE                                     PORTS
+at2le0hlbpxs        visualizer            replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp
+ve0ulvyhsz47        docker-routing-mesh   replicated          0/0                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp
+
   
