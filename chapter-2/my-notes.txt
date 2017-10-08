@@ -433,5 +433,35 @@ f570021927e0        docker_gwbridge     bridge              local
 524c6d12d59f        host                host                local                          
 r8p37o09u0pq        ingress             overlay             swarm                          
 00e1c720006c        none                null                local                          
-8y6zp1mw8bby        routing-mesh        overlay             swarm                          
+8y6zp1mw8bby        routing-mesh        overlay             swarm   
+
+$ docker service create --name=docker-routing-mesh-svc --publish=8080:8080 --network=routing-mesh albertogviana/docker-routing-mesh:1.0.0
+xum6cp7s3g699juqgd7grqrmf
+Since --detach=false was not specified, tasks will be created in the background.
+In a future release, --detach=false will become the default.
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS
+tmdcry9edao1v9b9hut2y3dxr *   swarm-1             Ready               Active              Leader
+kzpd4d671jxontgmj4umwzmdu     swarm-2             Ready               Active
+x8794asq041ys7hc2wq1evur1     swarm-3             Ready               Active
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ docker service ls
+ID                  NAME                      MODE                REPLICAS            IMAGE                                     PORTS
+3x1onmfsfgk1        visualizer                replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp
+xum6cp7s3g69        docker-routing-mesh-svc   replicated          1/1                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ curl $(docker-machine ip swarm-1):8080
+The hostname is a00237d05ad4!
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ curl $(docker-machine ip swarm-2):8080
+The hostname is a00237d05ad4!
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ curl $(docker-machine ip swarm-3):8080
+The hostname is a00237d05ad4!
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$                       
                                                                                            
