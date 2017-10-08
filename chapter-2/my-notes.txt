@@ -464,4 +464,20 @@ $ curl $(docker-machine ip swarm-3):8080
 The hostname is a00237d05ad4!
 Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
 $                       
-                                                                                           
+
+
+$ docker ps                                                                                                                                                                                                                                                                  
+CONTAINER ID        IMAGE                             COMMAND             CREATED             STATUS                       PORTS               NAMES                              
+4353bf36920c        dockersamples/visualizer:latest   "npm start"         About an hour ago   Up About an hour (healthy)   8080/tcp            visualizer.1.zetmbwynfl643ql9k41ar6
+axc                                                                                                                                                                               
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ eval $(docker-machine env swarm-2)                                                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker ps                                                                                                                                                                       
+CONTAINER ID        IMAGE                                     COMMAND                  CREATED             STATUS                    PORTS               NAMES                    
+a00237d05ad4        albertogviana/docker-routing-mesh:1.0.0   "/bin/sh -c docker..."   24 minutes ago      Up 24 minutes (healthy)   8080/tcp            docker-routing-mesh-svc.1
+.f8lpml9nhocotncnmeppd69fh 
+
+                                                                                                                                                       
