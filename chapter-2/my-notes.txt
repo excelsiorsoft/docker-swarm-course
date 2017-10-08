@@ -411,6 +411,7 @@ Same resulting page would show for: http://192.168.99.118:8000/  and http://192.
 This is Docker routing mesh in action - requests are redirected to the proper node across the cluster.
 
 Networking
+----------
 
 Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
 $ docker network ls                                                                          
@@ -479,5 +480,8 @@ $ docker ps
 CONTAINER ID        IMAGE                                     COMMAND                  CREATED             STATUS                    PORTS               NAMES                    
 a00237d05ad4        albertogviana/docker-routing-mesh:1.0.0   "/bin/sh -c docker..."   24 minutes ago      Up 24 minutes (healthy)   8080/tcp            docker-routing-mesh-svc.1
 .f8lpml9nhocotncnmeppd69fh 
+
+Scaling Services over encrypted Networking
+===========================================
 
                                                                                                                                                        
