@@ -48,3 +48,42 @@ The hostname is df82aef562ba!
 The hostname is c9ab47e6e387!
 The hostname is b41faa8e1926!
 ```
+Replicating Docker Secret:
+```
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker secret create my_secret ./secret.txt                                            
+ulec3yck5jpwywg6o7ptxnun7                                                                
+                                                                                         
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker secret ls                                                                       
+ID                          NAME                CREATED             UPDATED              
+ulec3yck5jpwywg6o7ptxnun7   my_secret           43 seconds ago      43 seconds ago      
+
+
+
+$ docker service scale docker-routing-mesh=0                                                                                                                                      
+docker-routing-mesh scaled to 0                                                                                                                                                  
+Since --detach=false was not specified, tasks will be scaled in the background.                                                                                                  
+In a future release, --detach=false will become the default.                                                                                                                     
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker service create --name redis --secret my_secret redis:alpine                                                                                                             
+qw7p323iyn7cnhjcrjeql0clg                                                                                                                                                        
+Since --detach=false was not specified, tasks will be created in the background.                                                                                                 
+In a future release, --detach=false will become the default.                                                                                                                     
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker ps                                                                                                                                                                      
+CONTAINER ID        IMAGE                             COMMAND             CREATED             STATUS                 PORTS               NAMES                                   
+6500b3d37dd5        dockersamples/visualizer:latest   "npm start"         2 hours ago         Up 2 hours (healthy)   8080/tcp            visualizer.1.ghxzchtiq58zu1k7o3n0kpfnh  
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker service ls                                                                                                                                                              
+ID                  NAME                  MODE                REPLICAS            IMAGE                                     PORTS                                                
+at2le0hlbpxs        visualizer            replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp                                     
+qw7p323iyn7c        redis                 replicated          1/1                 redis:alpine                                                                                   
+ve0ulvyhsz47        docker-routing-mesh   replicated          0/0                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp                                     
+
+```
+![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/visualizer%2Bredis.PNG)
+                                                                                                                                                                                 
