@@ -6,4 +6,6 @@ The original author's [code and notes](https://github.com/excelsiorsoft/docker-s
 
 My own chapter notes are added to the corresponding folders as `my-notes.txt` files.
 
+The author also has a [repo with similar contents](https://github.com/albertogviana/docker-swarm-presentation).
 
+Docker Swarm Visualizer is described in more details [here](https://github.com/dockersamples/docker-swarm-visualizer).
