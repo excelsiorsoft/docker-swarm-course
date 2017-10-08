@@ -33,6 +33,7 @@ These services are also replicateable via `docker service scale docker-routing-m
 
 ![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/replicated%20services.PNG)
 
+```
 $ while true; do curl http://$(docker-machine ip swarm-1):8080; sleep 1; printf "\n"; done
 The hostname is c9ab47e6e387!
 The hostname is b41faa8e1926!
@@ -46,3 +47,4 @@ The hostname is f9cbd7b427be!
 The hostname is df82aef562ba!
 The hostname is c9ab47e6e387!
 The hostname is b41faa8e1926!
+```
