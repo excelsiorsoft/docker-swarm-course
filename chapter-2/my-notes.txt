@@ -886,4 +886,146 @@ ulec3yck5jpwywg6o7ptxnun7
 Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
 $ docker secret ls                                                                       
 ID                          NAME                CREATED             UPDATED              
-ulec3yck5jpwywg6o7ptxnun7   my_secret           43 seconds ago      43 seconds ago       
+ulec3yck5jpwywg6o7ptxnun7   my_secret           43 seconds ago      43 seconds ago      
+
+
+
+$ docker service scale docker-routing-mesh=0                                                                                                                                      
+docker-routing-mesh scaled to 0                                                                                                                                                  
+Since --detach=false was not specified, tasks will be scaled in the background.                                                                                                  
+In a future release, --detach=false will become the default.                                                                                                                     
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker service create --name redis --secret my_secret redis:alpine                                                                                                             
+qw7p323iyn7cnhjcrjeql0clg                                                                                                                                                        
+Since --detach=false was not specified, tasks will be created in the background.                                                                                                 
+In a future release, --detach=false will become the default.                                                                                                                     
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker ps                                                                                                                                                                      
+CONTAINER ID        IMAGE                             COMMAND             CREATED             STATUS                 PORTS               NAMES                                   
+6500b3d37dd5        dockersamples/visualizer:latest   "npm start"         2 hours ago         Up 2 hours (healthy)   8080/tcp            visualizer.1.ghxzchtiq58zu1k7o3n0kpfnh  
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                          
+$ docker service ls                                                                                                                                                              
+ID                  NAME                  MODE                REPLICAS            IMAGE                                     PORTS                                                
+at2le0hlbpxs        visualizer            replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp                                     
+qw7p323iyn7c        redis                 replicated          1/1                 redis:alpine                                                                                   
+ve0ulvyhsz47        docker-routing-mesh   replicated          0/0                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp                                     
+
+
+$ docker service ps redis
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+y32vgkhmh3ix        redis.1             redis:alpine        swarm-3             Running             Running 8 minutes ago
+
+ 
+$ docker-machine ls                                                                                                                                                               
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS                                                                                
+default   -        virtualbox   Running   tcp://192.168.99.103:2376           v17.09.0-ce                                                                                         
+swarm-1   *        virtualbox   Running   tcp://192.168.99.100:2376           v17.09.0-ce                                                                                         
+swarm-2   -        virtualbox   Running   tcp://192.168.99.101:2376           v17.09.0-ce                                                                                         
+swarm-3   -        virtualbox   Running   tcp://192.168.99.102:2376           v17.09.0-ce                                                                                         
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker ps                                                                                                                                                                       
+CONTAINER ID        IMAGE                             COMMAND             CREATED             STATUS                 PORTS               NAMES                                    
+6500b3d37dd5        dockersamples/visualizer:latest   "npm start"         3 hours ago         Up 3 hours (healthy)   8080/tcp            visualizer.1.ghxzchtiq58zu1k7o3n0kpfnh   
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ eval $(docker-machine env swarm-3)                                                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker ps                                                                                                                                                                       
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES                                                
+0b65932f0798        redis:alpine        "docker-entrypoint..."   12 minutes ago      Up 12 minutes       6379/tcp            redis.1.y32vgkhmh3ixelq2efh9cdoon                    
+
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)   
+$ docker ps --filter name=redis -q                                                        
+0b65932f0798                                                                              
+                                                                                          
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)   
+$ docker exec $(docker ps --filter name=redis -q) ls -l /run/secrets                      
+total 4                                                                                   
+-r--r--r--    1 root     root            17 Oct  8 18:07 my_secret                        
+                                                                                          
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)   
+$ docker exec $(docker ps --filter name=redis -q) cat /run/secrets/my_secret              
+this is my secret   
+
+$ docker-machine ls                                                                                                                                                                                       
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS                                  
+default   -        virtualbox   Running   tcp://192.168.99.103:2376           v17.09.0-ce                                           
+swarm-1   -        virtualbox   Running   tcp://192.168.99.100:2376           v17.09.0-ce                                           
+swarm-2   -        virtualbox   Running   tcp://192.168.99.101:2376           v17.09.0-ce                                           
+swarm-3   *        virtualbox   Running   tcp://192.168.99.102:2376           v17.09.0-ce                                           
+                                                                                                                                    
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                             
+$ eval $(docker-machine env swarm-1)                                                                                                
+                                                                                                                                    
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                             
+$ docker secret rm my_secret                                                                                                        
+Error response from daemon: rpc error: code = InvalidArgument desc = secret 'my_secret' is in use by the following service: redis   
+
+$ docker service rm redis
+redis
+
+$ eval $(docker-machine env swarm-1)                                                                                                                                                                                              
+                                                                                               
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)        
+$ docker secret rm my_secret                                                                   
+my_secret 
+
+Deploy configuration as a secret
+================================
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ ls -la default.conf
+-rw-r--r-- 1 Simeon 197121 1092 Jul 23 17:27 default.conf
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ docker secret create default.conf ./default.conf
+tyooxtk535s6xsscoqbrf534h
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)
+$ docker secret ls
+ID                          NAME                CREATED             UPDATED
+tyooxtk535s6xsscoqbrf534h   default.conf        9 seconds ago       9 seconds ago
+
+$ docker service create --name nginx --secret source=default.conf,target=/etc/nginx/conf.d/default.conf --publish 80:80 nginx:latest sh -c "exec nginx -g 'daemon off;'"
+kr1tt3bhhhdlwbkfqrw9fu61c
+Since --detach=false was not specified, tasks will be created in the background.
+In a future release, --detach=false will become the default.
+
+$ docker service ps nginx
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+yugjpz9aaawd        nginx.1             nginx:latest        swarm-2             Running             Running 11 seconds ago
+
+$ curl $(docker-machine ip swarm-1):80                                                 
+<!DOCTYPE html>                                                                                                                                                             
+<html>                                                                                 
+<head>                                                                                 
+<title>Welcome to nginx!</title>                                                       
+<style>                                                                                
+    body {                                                                             
+        width: 35em;                                                                   
+        margin: 0 auto;                                                                
+        font-family: Tahoma, Verdana, Arial, sans-serif;                               
+    }                                                                                  
+</style>                                                                               
+</head>                                                                                
+<body>                                                                                 
+<h1>Welcome to nginx!</h1>                                                             
+<p>If you see this page, the nginx web server is successfully installed and            
+working. Further configuration is required.</p>                                        
+                                                                                       
+<p>For online documentation and support please refer to                                
+<a href="http://nginx.org/">nginx.org</a>.<br/>                                        
+Commercial support is available at                                                     
+<a href="http://nginx.com/">nginx.com</a>.</p>                                         
+                                                                                       
+<p><em>Thank you for using nginx.</em></p>                                             
+</body>                                                                                
+</html>                                                                                
+  
+  
