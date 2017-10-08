@@ -13,3 +13,14 @@ Docker Swarm Visualizer is described in more details [here](https://github.com/d
 Couple of services running in a cluster (from Chapter 2): 
 
 ![](https://github.com/excelsiorsoft/docker-swarm-course/blob/master/chapter-2/services-deployed-in-a-swarm.PNG)
+
+are accessible on all cluster nodes:
+```
+$ curl $(docker-machine ip swarm-1):8080
+The hostname is a00237d05ad4!
+$ curl $(docker-machine ip swarm-2):8080
+The hostname is a00237d05ad4!
+$ curl $(docker-machine ip swarm-3):8080
+The hostname is a00237d05ad4!
+$
+```
