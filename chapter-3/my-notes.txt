@@ -115,6 +115,9 @@ Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/s
 $                                                                                                                                                                                
 Repo created on docker hub: https://hub.docker.com/r/sleyzezon/names-demo/
 
+Was created as private.  Must be changed to public on the Docker Hub to enable further pull!!!!!
+
+
 Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source (master)                                                                                                                                                                                                    
 $ ll                                                                                                             
 total 5                                                                                                          
@@ -294,21 +297,33 @@ $ docker service ps mongodb
 ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
 rrovkryovtun        mongodb.1           mongo:3.2.15        swarm-2             Running             Running 5 seconds ago                                                                                                                                                                        
                                                                                                                                                                         
-$ docker service create --name names-demo --network names-demo -e DB=mongodb -p 8080:8080 sleyzezon/names-demo
-image sleyzezon/names-demo:latest could not be accessed on a registry to record
-its digest. Each node will access sleyzezon/names-demo:latest independently,
-possibly leading to different nodes running different
-versions of the image.
+$  docker service create --name names-demo --network names-demo -e DB=mongodb -p 8080:8080  sleyzezon/names-demo                                                                                                                                                   
+mz9nthdoibxkupn2u1j26jqy3                                                                                                     
+Since --detach=false was not specified, tasks will be created in the background.                                              
+In a future release, --detach=false will become the default.                                                                  
+                                                                                                                              
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source/names (master)                          
+$ docker images                                                                                                               
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE                                   
+sleyzezon/names-demo       latest              161b1c6a660c        2 minutes ago       18.5MB                                 
+<none>                     <none>              2781a497395c        2 minutes ago       309MB                                  
+golang                     alpine              107ed76bfbd2        4 days ago          270MB                                  
+dockersamples/visualizer   <none>              8ca809a94e1e        2 weeks ago         148MB                                  
+alpine                     latest              76da55c8019d        3 weeks ago         3.97MB                                 
+                                                                                                                       
+																																										
+																																										
+																																										
+Docker will use service discovery mechanism to point to mongodb container (names-demo -> mongodb) specified via DB environment variable.  
 
-xs2v7u1lgx045f6fn8w3rvrbd
-Since --detach=false was not specified, tasks will be created in the background.
-In a future release, --detach=false will become the default.
+$ docker service ls                                                                                                                  
+ID                  NAME                MODE                REPLICAS            IMAGE                             PORTS                                                                                                                                                                                    
+lkynibehke5t        mongodb             replicated          1/1                 mongo:3.2.15                                         
+mz9nthdoibxk        names-demo          replicated          1/1                 sleyzezon/names-demo:latest       *:8080->8080/tcp   
+w8p5s3ihjylq        visualizer          replicated          1/1                 dockersamples/visualizer:latest   *:8000->8080/tcp   
 
-Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source (master)
-$ docker service ls
-ID                  NAME                MODE                REPLICAS            IMAGE                             PORTS
-lkynibehke5t        mongodb             replicated          1/1                 mongo:3.2.15
-w8p5s3ihjylq        visualizer          replicated          1/1                 dockersamples/visualizer:latest   *:8000->8080/tcp
-xs2v7u1lgx04        names-demo          replicated          0/1                 sleyzezon/names-demo:latest       *:8080->8080/tcp
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source/names (master)
+$ docker service ps names-demo
+ID                  NAME                IMAGE                         NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+mf0p1iu5z86n        names-demo.1        sleyzezon/names-demo:latest   swarm-3             Running             Running 7 minutes ago
 
-                                                                                                                                                                        
