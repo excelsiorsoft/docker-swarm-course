@@ -1,3 +1,5 @@
 #!/bin/bash
 
-docker-machine rm -f swarm-1
+for i in 1 2 3; do
+    docker-machine rm -f swarm-$i
+done
