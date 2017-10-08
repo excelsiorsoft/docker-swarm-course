@@ -865,4 +865,25 @@ $ docker-machine inspect | jq -C .
 Docker Secrets
 ---------------
 
-                                                                                                        
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                                          
+$ echo 'this is my secret' | docker secret create my_secret -                            
+Error reading content from "-": Incorrect function.   
+
+see https://stackoverflow.com/questions/46633885/unable-to-create-a-docker-secret-from-stdin                                   
+                                                                                         
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker-machine version                                                                 
+docker-machine.exe version 0.12.2, build 9371605                                         
+                                                                                         
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker secret ls                                                                       
+ID                  NAME                CREATED             UPDATED                      
+                                                                                         
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker secret create my_secret ./secret.txt                                            
+ulec3yck5jpwywg6o7ptxnun7                                                                
+                                                                                         
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)  
+$ docker secret ls                                                                       
+ID                          NAME                CREATED             UPDATED              
+ulec3yck5jpwywg6o7ptxnun7   my_secret           43 seconds ago      43 seconds ago       
