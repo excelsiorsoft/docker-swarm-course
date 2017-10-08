@@ -404,6 +404,13 @@ Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (
 $ docker-machine ip swarm-1
 192.168.99.117     
 
-In the browser: http://192.168.99.117:8000/    
+In the browser: http://192.168.99.117:8000/  shows docker visualizer
+
+Same resulting page would show for: http://192.168.99.118:8000/  and http://192.168.99.119:8000/   
+
+This is Docker routing mesh in action - requests are redirected to the proper node across the cluster.
+
+
+  
 
                                                                                                             
