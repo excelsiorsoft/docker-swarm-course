@@ -484,4 +484,279 @@ a00237d05ad4        albertogviana/docker-routing-mesh:1.0.0   "/bin/sh -c docker
 Scaling Services over encrypted Networking
 ===========================================
 
-                                                                                                                                                       
+Simeon@LAPTOP-P0PO4U7C MSYS ~                                                                                                                                                                                                                                                                                                            
+$ cd /c/Users/senya/source/docker-swarm-course/chapter-2/section-2.5                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker node ls                                                                                                                                                                  
+Error response from daemon: This node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again.                         
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker-machine ls                                                                                                                                                               
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS                                                                                
+default   *        virtualbox   Running   tcp://192.168.99.103:2376           v17.09.0-ce                                                                                         
+swarm-1   -        virtualbox   Running   tcp://192.168.99.100:2376           v17.09.0-ce                                                                                         
+swarm-2   -        virtualbox   Running   tcp://192.168.99.101:2376           v17.09.0-ce                                                                                         
+swarm-3   -        virtualbox   Running   tcp://192.168.99.102:2376           v17.09.0-ce                                                                                         
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ eval $(docker-machine env swarm-1)                                                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker node ls                                                                                                                                                                  
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS                                                                          
+kry1zy5piue7uo2l473cxuo1a *   swarm-1             Ready               Active              Leader                                                                                  
+i97eu0z4fi4a4ty64jow5mjem     swarm-2             Ready               Active                                                                                                      
+z329f2rstt4rcfk5x2gh7n8oy     swarm-3             Ready               Active                                                                                                      
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker network ls                                                                                                                                                               
+NETWORK ID          NAME                DRIVER              SCOPE                                                                                                                 
+203f0a1e63f9        bridge              bridge              local                                                                                                                 
+5323b3ab3302        docker_gwbridge     bridge              local                                                                                                                 
+66248d651a88        host                host                local                                                                                                                 
+h88i48rjbe8e        ingress             overlay             swarm                                                                                                                 
+2e6c5163b807        none                null                local                                                                                                                 
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker network create -d overlay --opt encrypted routing-mesh                                                                                                                   
+s7bmgwmdji9o6ybmsw8v6zyc4                                                                                                                                                         
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker network ls                                                                                                                                                               
+NETWORK ID          NAME                DRIVER              SCOPE                                                                                                                 
+203f0a1e63f9        bridge              bridge              local                                                                                                                 
+5323b3ab3302        docker_gwbridge     bridge              local                                                                                                                 
+66248d651a88        host                host                local                                                                                                                 
+h88i48rjbe8e        ingress             overlay             swarm                                                                                                                 
+2e6c5163b807        none                null                local                                                                                                                 
+s7bmgwmdji9o        routing-mesh        overlay             swarm                                                                                                                 
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service ls                                                                                                                                                               
+ID                  NAME                MODE                REPLICAS            IMAGE                             PORTS                                                           
+at2le0hlbpxs        visualizer          replicated          1/1                 dockersamples/visualizer:latest   *:8000->8080/tcp                                                
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service create --name=docker-routing-mesh --publish=8080:8080/tcp --network routing-mesh --reserve-memory 20m albertogviana/docker-routing-mesh:1.0.0                    
+ve0ulvyhsz47gy5jx0o63of38                                                                                                                                                         
+Since --detach=false was not specified, tasks will be created in the background.                                                                                                  
+In a future release, --detach=false will become the default.                                                                                                                      
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service ls                                                                                                                                                               
+ID                  NAME                  MODE                REPLICAS            IMAGE                                     PORTS                                                 
+at2le0hlbpxs        visualizer            replicated          1/1                 dockersamples/visualizer:latest           *:8000->8080/tcp                                      
+ve0ulvyhsz47        docker-routing-mesh   replicated          0/1                 albertogviana/docker-routing-mesh:1.0.0   *:8080->8080/tcp                                      
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ curl 192.168.99.100:8000                                                                                                                                                        
+<!doctype html>                                                                                                                                                                   
+<html>                                                                                                                                                                            
+<head>                                                                                                                                                                            
+  <meta charset="utf-8">                                                                                                                                                          
+  <title>Visualizer</title>                                                                                                                                                       
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">                                                                                                                  
+  <meta name="description" content="">                                                                                                                                            
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">                                                                     
+  <link href='//fonts.googleapis.com/css?family=Ubuntu+Mono|Open+Sans:400,700,400italic' rel='stylesheet' type='text/css'>                                                        
+  <style type="text/css">                                                                                                                                                         
+   .hidden{ display: none; }                                                                                                                                                      
+  </style>                                                                                                                                                                        
+</head>                                                                                                                                                                           
+<body style='background:#254356'>                                                                                                                                                 
+  <div class='tabs'>                                                                                                                                                              
+    <button id='tab-physical'>                                                                                                                                                    
+      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><path fill="#FFF" d="M14.752 32.456l-7.72.002v7.553h7.72v-7.554zm9.65 0h-7.72v7.556h7.72v
+-7.556zm0-9.445h-7.72v7.556h7.72V23.01zm9.65 9.446h-7.72v7.556h7.72v-7.556zm0-9.445h-7.72v7.556h7.72V23.01zm9.648 9.446h-7.72v7.556h7.72v-7.556zm0-9.445h-7.72v7.556h7.72V23.01zm9
+.65 9.446l-7.72.002v7.553h7.72v-7.554zm-9.65-18.89h-7.72v7.556h7.72v-7.556zm31.938 23.106c-2.51-1.417-5.85-1.61-8.693-.792-.35-2.958-2.337-5.55-4.7-7.41l-.938-.738-.79.89c-1.58 1
+.79-2.052 4.768-1.838 7.053.16 1.68.697 3.388 1.756 4.737-.805.473-1.717.85-2.53 1.12-1.657.55-3.456.854-5.206.854H3.544l-.105 1.107c-.354 3.7.165 7.402 1.728 10.778l.673 1.343.0
+78.124c4.622 7.68 12.74 10.914 21.584 10.914 17.125 0 31.248-7.48 37.734-23.284 4.335.222 8.77-1.033 10.89-5.082l.54-1.033-1.028-.578zm-57.77 19.982v.002c-2.18 0-3.955-1.735-3.95
+5-3.866 0-2.132 1.774-3.866 3.954-3.866s3.954 1.732 3.954 3.865c0 2.13-1.77 3.864-3.95 3.864zm-.01-5.854c-1.137 0-2.06.9-2.06 2.013 0 1.11.924 2.01 2.06 2.01 1.134 0 2.057-.9 2.0
+57-2.01 0-1.11-.922-2.013-2.057-2.013z"/></svg>                                                                                                                                   
+    </button>                                                                                                                                                                     
+                                                                                                                                                                                  
+  </div>                                                                                                                                                                          
+  <div id="app">                                                                                                                                                                  
+    <!-- content goes here -->                                                                                                                                                    
+  </div>                                                                                                                                                                          
+                                                                                                                                                                                  
+  <script type="text/javascript">                                                                                                                                                 
+    window.MS = '1000';                                                                                                                                                           
+  </script>                                                                                                                                                                       
+  <script type="text/javascript" src="app.js"></script>                                                                                                                           
+</body>                                                                                                                                                                           
+</html>                                                                                                                                                                           
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ curl 192.168.99.100:8080                                                                                                                                                        
+The hostname is c5cdeb85ba19!                                                                                                                                                     
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service                                                                                                                                                                  
+                                                                                                                                                                                  
+Usage:  docker service COMMAND                                                                                                                                                    
+                                                                                                                                                                                  
+Manage services                                                                                                                                                                   
+                                                                                                                                                                                  
+Options:                                                                                                                                                                          
+      --help   Print usage                                                                                                                                                        
+                                                                                                                                                                                  
+Commands:                                                                                                                                                                         
+  create      Create a new service                                                                                                                                                
+  inspect     Display detailed information on one or more services                                                                                                                
+  logs        Fetch the logs of a service or task                                                                                                                                 
+  ls          List services                                                                                                                                                       
+  ps          List the tasks of one or more services                                                                                                                              
+  rm          Remove one or more services                                                                                                                                         
+  scale       Scale one or multiple replicated services                                                                                                                           
+  update      Update a service                                                                                                                                                    
+                                                                                                                                                                                  
+Run 'docker service COMMAND --help' for more information on a command.                                                                                                            
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service create                                                                                                                                                           
+"docker service create" requires at least 1 argument(s).                                                                                                                          
+See 'docker service create --help'.                                                                                                                                               
+                                                                                                                                                                                  
+Usage:  docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]                                                                                                                  
+                                                                                                                                                                                  
+Create a new service                                                                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$ docker service create --help                                                                                                                                                    
+                                                                                                                                                                                  
+Usage:  docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]                                                                                                                  
+                                                                                                                                                                                  
+Create a new service                                                                                                                                                              
+                                                                                                                                                                                  
+Options:                                                                                                                                                                          
+      --config config                      Specify configurations to                                                                                                              
+                                           expose to the service                                                                                                                  
+      --constraint list                    Placement constraints                                                                                                                  
+      --container-label list               Container labels                                                                                                                       
+      --credential-spec credential-spec    Credential spec for managed                                                                                                            
+                                           service account (Windows only)                                                                                                         
+  -d, --detach                             Exit immediately instead of                                                                                                            
+                                           waiting for the service to                                                                                                             
+                                           converge (default true)                                                                                                                
+      --dns list                           Set custom DNS servers                                                                                                                 
+      --dns-option list                    Set DNS options                                                                                                                        
+      --dns-search list                    Set custom DNS search domains                                                                                                          
+      --endpoint-mode string               Endpoint mode (vip or dnsrr)                                                                                                           
+                                           (default "vip")                                                                                                                        
+      --entrypoint command                 Overwrite the default                                                                                                                  
+                                           ENTRYPOINT of the image                                                                                                                
+  -e, --env list                           Set environment variables                                                                                                              
+      --env-file list                      Read in a file of environment                                                                                                          
+                                           variables                                                                                                                              
+      --group list                         Set one or more supplementary                                                                                                          
+                                           user groups for the container                                                                                                          
+      --health-cmd string                  Command to run to check health                                                                                                         
+      --health-interval duration           Time between running the check                                                                                                         
+                                           (ms|s|m|h)                                                                                                                             
+      --health-retries int                 Consecutive failures needed to                                                                                                         
+                                           report unhealthy                                                                                                                       
+      --health-start-period duration       Start period for the container                                                                                                         
+                                           to initialize before counting                                                                                                          
+                                           retries towards unstable (ms|s|m|h)                                                                                                    
+      --health-timeout duration            Maximum time to allow one                                                                                                              
+                                           check to run (ms|s|m|h)                                                                                                                
+      --help                               Print usage                                                                                                                            
+      --host list                          Set one or more custom                                                                                                                 
+                                           host-to-IP mappings (host:ip)                                                                                                          
+      --hostname string                    Container hostname                                                                                                                     
+  -l, --label list                         Service labels                                                                                                                         
+      --limit-cpu decimal                  Limit CPUs                                                                                                                             
+      --limit-memory bytes                 Limit Memory                                                                                                                           
+      --log-driver string                  Logging driver for service                                                                                                             
+      --log-opt list                       Logging driver options                                                                                                                 
+      --mode string                        Service mode (replicated or                                                                                                            
+                                           global) (default "replicated")                                                                                                         
+      --mount mount                        Attach a filesystem mount to                                                                                                           
+                                           the service                                                                                                                            
+      --name string                        Service name                                                                                                                           
+      --network network                    Network attachments                                                                                                                    
+      --no-healthcheck                     Disable any                                                                                                                            
+                                           container-specified HEALTHCHECK                                                                                                        
+      --no-resolve-image                   Do not query the registry to                                                                                                           
+                                           resolve image digest and                                                                                                               
+                                           supported platforms                                                                                                                    
+      --placement-pref pref                Add a placement preference                                                                                                             
+  -p, --publish port                       Publish a port as a node port                                                                                                          
+  -q, --quiet                              Suppress progress output                                                                                                               
+      --read-only                          Mount the container's root                                                                                                             
+                                           filesystem as read only                                                                                                                
+      --replicas uint                      Number of tasks                                                                                                                        
+      --reserve-cpu decimal                Reserve CPUs                                                                                                                           
+      --reserve-memory bytes               Reserve Memory                                                                                                                         
+      --restart-condition string           Restart when condition is met                                                                                                          
+                                           ("none"|"on-failure"|"any")                                                                                                            
+                                           (default "any")                                                                                                                        
+      --restart-delay duration             Delay between restart attempts                                                                                                         
+                                           (ns|us|ms|s|m|h) (default 5s)                                                                                                          
+      --restart-max-attempts uint          Maximum number of restarts                                                                                                             
+                                           before giving up                                                                                                                       
+      --restart-window duration            Window used to evaluate the                                                                                                            
+                                           restart policy (ns|us|ms|s|m|h)                                                                                                        
+      --rollback-delay duration            Delay between task rollbacks                                                                                                           
+                                           (ns|us|ms|s|m|h) (default 0s)                                                                                                          
+      --rollback-failure-action string     Action on rollback failure                                                                                                             
+                                           ("pause"|"continue") (default                                                                                                          
+                                           "pause")                                                                                                                               
+      --rollback-max-failure-ratio float   Failure rate to tolerate                                                                                                               
+                                           during a rollback (default 0)                                                                                                          
+      --rollback-monitor duration          Duration after each task                                                                                                               
+                                           rollback to monitor for                                                                                                                
+                                           failure (ns|us|ms|s|m|h)                                                                                                               
+                                           (default 5s)                                                                                                                           
+      --rollback-order string              Rollback order                                                                                                                         
+                                           ("start-first"|"stop-first")                                                                                                           
+                                           (default "stop-first")                                                                                                                 
+      --rollback-parallelism uint          Maximum number of tasks rolled                                                                                                         
+                                           back simultaneously (0 to roll                                                                                                         
+                                           back all at once) (default 1)                                                                                                          
+      --secret secret                      Specify secrets to expose to                                                                                                           
+                                           the service                                                                                                                            
+      --stop-grace-period duration         Time to wait before force                                                                                                              
+                                           killing a container                                                                                                                    
+                                           (ns|us|ms|s|m|h) (default 10s)                                                                                                         
+      --stop-signal string                 Signal to stop the container                                                                                                           
+  -t, --tty                                Allocate a pseudo-TTY                                                                                                                  
+      --update-delay duration              Delay between updates                                                                                                                  
+                                           (ns|us|ms|s|m|h) (default 0s)                                                                                                          
+      --update-failure-action string       Action on update failure                                                                                                               
+                                           ("pause"|"continue"|"rollback") (default "pause")                                                                                      
+      --update-max-failure-ratio float     Failure rate to tolerate                                                                                                               
+                                           during an update (default 0)                                                                                                           
+      --update-monitor duration            Duration after each task                                                                                                               
+                                           update to monitor for failure                                                                                                          
+                                           (ns|us|ms|s|m|h) (default 5s)                                                                                                          
+      --update-order string                Update order                                                                                                                           
+                                           ("start-first"|"stop-first")                                                                                                           
+                                           (default "stop-first")                                                                                                                 
+      --update-parallelism uint            Maximum number of tasks                                                                                                                
+                                           updated simultaneously (0 to                                                                                                           
+                                           update all at once) (default 1)                                                                                                        
+  -u, --user string                        Username or UID (format:                                                                                                               
+                                           <name|uid>[:<group|gid>])                                                                                                              
+      --with-registry-auth                 Send registry authentication                                                                                                           
+                                           details to swarm agents                                                                                                                
+  -w, --workdir string                     Working directory inside the                                                                                                           
+                                           container                                                                                                                              
+                                                                                                                                                                                  
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                           
+$                                                                                                                                                                                 
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)                                                                                                                                                                                      
+$ curl $(docker-machine ip swarm-1):8080                                                   
+The hostname is c5cdeb85ba19!                                                              
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ curl $(docker-machine ip swarm-2):8080                                                   
+The hostname is c5cdeb85ba19!                                                              
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ curl $(docker-machine ip swarm-3):8080                                                   
+The hostname is c5cdeb85ba19!                                                              
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-2/section-2.5 (master)    
+$ 
+
+                                                                                         
