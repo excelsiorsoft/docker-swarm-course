@@ -1,0 +1,72 @@
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source/names (master)                                                                             
+$ docker build -t albertogviana/names-demo .                                                                                                                                     
+Sending build context to Docker daemon  10.24kB                                                                                                                                  
+Step 1/11 : FROM golang:alpine AS build                                                                                                                                          
+alpine: Pulling from library/golang                                                                                                                                              
+88286f41530e: Pull complete                                                                                                                                                      
+3f27971ac235: Pull complete                                                                                                                                                      
+d3324d2049d6: Pull complete                                                                                                                                                      
+ca1727e0a894: Pull complete                                                                                                                                                      
+905890d9f326: Pull complete                                                                                                                                                      
+5323a74c388a: Pull complete                                                                                                                                                      
+Digest: sha256:acbbbac5fdc7acda7f758b34807350ce691eb509ca64bd3c9f8af7a58438043d                                                                                                  
+Status: Downloaded newer image for golang:alpine                                                                                                                                 
+ ---> 107ed76bfbd2                                                                                                                                                               
+Step 2/11 : WORKDIR /go/src/bitbucket.org/albertogviana/go-microservice/names/                                                                                                   
+ ---> 31c61b1b5dbd                                                                                                                                                               
+Removing intermediate container 2b5d711516a2                                                                                                                                     
+Step 3/11 : COPY . .                                                                                                                                                             
+ ---> 05f566fe0916                                                                                                                                                               
+Step 4/11 : RUN apk update &&   apk add git &&  go get gopkg.in/mgo.v2 &&   go build -v -o names-demo                                                                            
+ ---> Running in fa94c16bf1ea                                                                                                                                                    
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz                                                                                                      
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz                                                                                                 
+v3.6.2-159-geb4330dc29 [http://dl-cdn.alpinelinux.org/alpine/v3.6/main]                                                                                                          
+v3.6.2-156-g9136e1f1bd [http://dl-cdn.alpinelinux.org/alpine/v3.6/community]                                                                                                     
+OK: 8441 distinct packages available                                                                                                                                             
+(1/5) Installing libssh2 (1.8.0-r1)                                                                                                                                              
+(2/5) Installing libcurl (7.56.0-r0)                                                                                                                                             
+(3/5) Installing expat (2.2.0-r1)                                                                                                                                                
+(4/5) Installing pcre (8.41-r0)                                                                                                                                                  
+(5/5) Installing git (2.13.5-r0)                                                                                                                                                 
+Executing busybox-1.26.2-r5.trigger                                                                                                                                              
+OK: 25 MiB in 17 packages                                                                                                                                                        
+bitbucket.org/albertogviana/go-microservice/names/models                                                                                                                         
+bitbucket.org/albertogviana/go-microservice/names                                                                                                                                
+ ---> 56929b941ffd                                                                                                                                                               
+Removing intermediate container fa94c16bf1ea                                                                                                                                     
+Step 5/11 : FROM alpine                                                                                                                                                          
+latest: Pulling from library/alpine                                                                                                                                              
+88286f41530e: Already exists                                                                                                                                                     
+Digest: sha256:f006ecbb824d87947d0b51ab8488634bf69fe4094959d935c0c103f4820a417d                                                                                                  
+Status: Downloaded newer image for alpine:latest                                                                                                                                 
+ ---> 76da55c8019d                                                                                                                                                               
+Step 6/11 : EXPOSE 8080                                                                                                                                                          
+ ---> Running in 9fc44e84c99d                                                                                                                                                    
+ ---> 468b3e159375                                                                                                                                                               
+Removing intermediate container 9fc44e84c99d                                                                                                                                     
+Step 7/11 : ENV APP_VERSION 1.0.0                                                                                                                                                
+ ---> Running in 83822131144c                                                                                                                                                    
+ ---> fe8ff6adff7a                                                                                                                                                               
+Removing intermediate container 83822131144c                                                                                                                                     
+Step 8/11 : COPY --from=build /go/src/bitbucket.org/albertogviana/go-microservice/names/names-demo /usr/local/bin/names-demo                                                     
+ ---> 15c79c23c35b                                                                                                                                                               
+Step 9/11 : RUN chmod +x /usr/local/bin/names-demo                                                                                                                               
+ ---> Running in 3af38d67461c                                                                                                                                                    
+ ---> d83a6de46bbb                                                                                                                                                               
+Removing intermediate container 3af38d67461c                                                                                                                                     
+Step 10/11 : HEALTHCHECK --interval=10s CMD wget -qO- localhost:8080/health                                                                                                      
+ ---> Running in 3bb2bb160c40                                                                                                                                                    
+ ---> a5516884422f                                                                                                                                                               
+Removing intermediate container 3bb2bb160c40                                                                                                                                     
+Step 11/11 : CMD names-demo                                                                                                                                                      
+ ---> Running in 908d5a373e88                                                                                                                                                    
+ ---> 6057942c9fcc                                                                                                                                                               
+Removing intermediate container 908d5a373e88                                                                                                                                     
+Successfully built 6057942c9fcc                                                                                                                                                  
+Successfully tagged albertogviana/names-demo:latest                                                                                                                              
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permiss
+ons. It is recommended to double check and reset permissions for sensitive files and directories.                                                                                
+                                                                                                                                                                                 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source/names (master)                                                                             
+$                                                                                                                                                                                
