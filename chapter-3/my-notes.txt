@@ -327,3 +327,208 @@ $ docker service ps names-demo
 ID                  NAME                IMAGE                         NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
 mf0p1iu5z86n        names-demo.1        sleyzezon/names-demo:latest   swarm-3             Running             Running 7 minutes ago
 
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source/names (master)
+$ curl -i -X POST -d '{"firstname": "Simeon", "lastname" : "L."}' -H "Accept: application/json" http://$(docker-machine ip swarm-3):8080/person/add
+HTTP/1.1 201 Created
+Date: Sun, 08 Oct 2017 23:31:27 GMT
+Content-Length: 0
+Content-Type: text/plain; charset=utf-8
+
+$ curl -i -H "Accept: application/json" http://$(docker-machine ip swarm-2):8080/person     
+HTTP/1.1 200 OK                                                                             
+Date: Sun, 08 Oct 2017 23:32:55 GMT                                                         
+Content-Length: 59                                                                          
+Content-Type: text/plain; charset=utf-8                                                     
+                                                                                            
+[                                                                                           
+  {                                                                                         
+    "firstname": "Simeon",                                                                  
+    "lastname": "L."                                                                        
+  }                                                                                         
+]  
+
+$ curl -i -X POST -d '{"firstname": "Roberto", "lastname" : "Carlos"}' -H "Accept: application/json" http://$(docker-machine ip swarm-1):8080/person/add
+HTTP/1.1 201 Created
+Date: Sun, 08 Oct 2017 23:35:24 GMT
+Content-Length: 0
+Content-Type: text/plain; charset=utf-8
+
+$ curl -i -H "Accept: application/json" http://$(docker-machine ip swarm-1):8080/person                                                                                                         
+HTTP/1.1 200 OK                                                                                        
+Date: Sun, 08 Oct 2017 23:36:03 GMT                                                                    
+Content-Length: 121                                                                                    
+Content-Type: text/plain; charset=utf-8                                                                
+                                                                                                       
+[                                                                                                      
+  {                                                                                                    
+    "firstname": "Simeon",                                                                             
+    "lastname": "L."                                                                                   
+  },                                                                                                   
+  {                                                                                                    
+    "firstname": "Roberto",                                                                            
+    "lastname": "Carlos"                                                                               
+  }                                                                                                    
+]
+
+
+$ curl -i -H "Accept: application/json" http://$(docker-machine ip swarm-1):8080/health
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 08 Oct 2017 23:52:10 GMT
+Content-Length: 33
+
+{"version":"1.0.0","status":"OK"}
+   
+
+$ docker service scale names-demo=5
+names-demo scaled to 5
+Since --detach=false was not specified, tasks will be scaled in the background.
+In a future release, --detach=false will become the default.
+
+On http://http://192.168.99.104:8000/ names-demo was replicated to 5 instances on 3 nodes.
+
+$ docker service ps names-demo
+ID                  NAME                IMAGE                         NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+mf0p1iu5z86n        names-demo.1        sleyzezon/names-demo:latest   swarm-3             Running             Running 43 minutes ago
+54kbtpd77hfr        names-demo.2        sleyzezon/names-demo:latest   swarm-1             Running             Running 13 minutes ago
+bk2ikspevtdg        names-demo.3        sleyzezon/names-demo:latest   swarm-2             Running             Running 13 minutes ago
+ip0fxiaqecnr        names-demo.4        sleyzezon/names-demo:latest   swarm-3             Running             Running 13 minutes ago
+jjh335lyvbfo        names-demo.5        sleyzezon/names-demo:latest   swarm-1             Running             Running 13 minutes ago
+
+
+Using Docker Secret with the application
+=========================================
+
+   Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source (master)                                                                                                   
+   $ ll                                                                                             
+   total 6                                                                                          
+   -rw-r--r-- 1 Simeon 197121  28 Aug  2 21:08 config.yml                                           
+   -rwxr-xr-x 1 Simeon 197121 723 Oct  7 21:05 create-machine.sh*                                   
+   -rwxr-xr-x 1 Simeon 197121  71 Jul 22 11:25 destroy-machine.sh*                                  
+   drwxr-xr-x 1 Simeon 197121   0 Jul 23 23:00 names/                                               
+   drwxr-xr-x 1 Simeon 197121   0 Oct  8 18:39 xx-not-used/
+
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source (master)
+$ ./destroy-machine.sh
+About to remove swarm-1
+WARNING: This action will delete both local reference and remote instance.
+Successfully removed swarm-1
+About to remove swarm-2
+WARNING: This action will delete both local reference and remote instance.
+Successfully removed swarm-2
+About to remove swarm-3
+WARNING: This action will delete both local reference and remote instance.
+Successfully removed swarm-3
+
+$ ./create-machine.sh                                                                                                                                                             
+Running pre-create checks...                                                                                                                                                   
+Creating machine...                                                                                                                                                            
+(swarm-1) Copying C:\Users\senya\.docker\machine\cache\boot2docker.iso to C:\Users\senya\.docker\machine\machines\swarm-1\boot2docker.iso...                                   
+(swarm-1) Creating VirtualBox VM...                                                                                                                                            
+(swarm-1) Creating SSH key...                                                                                                                                                  
+(swarm-1) Starting the VM...                                                                                                                                                   
+(swarm-1) Check network to re-create if needed...                                                                                                                              
+(swarm-1) Waiting for an IP...                                                                                                                                                 
+Waiting for machine to be running, this may take a few minutes...                                                                                                              
+Detecting operating system of created instance...                                                                                                                              
+Waiting for SSH to be available...                                                                                                                                             
+Detecting the provisioner...                                                                                                                                                   
+Provisioning with boot2docker...                                                                                                                                               
+Copying certs to the local machine directory...                                                                                                                                
+Copying certs to the remote machine...                                                                                                                                         
+Setting Docker configuration on the remote daemon...                                                                                                                           
+                                                                                                                                                                               
+This machine has been allocated an IP address, but Docker Machine could not                                                                                                    
+reach it successfully.                                                                                                                                                         
+                                                                                                                                                                               
+SSH for the machine should still work, but connecting to exposed ports, such as                                                                                                
+the Docker daemon port (usually <ip>:2376), may not work properly.                                                                                                             
+                                                                                                                                                                               
+You may need to add the route manually, or use another related workaround.                                                                                                     
+                                                                                                                                                                               
+This could be due to a VPN, proxy, or host file configuration issue.                                                                                                           
+                                                                                                                                                                               
+You also might want to clear any VirtualBox host only interfaces you are not using.                                                                                            
+Checking connection to Docker...                                                                                                                                               
+Docker is up and running!                                                                                                                                                      
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env swarm-1             
+Running pre-create checks...                                                                                                                                                   
+Creating machine...                                                                                                                                                            
+(swarm-2) Copying C:\Users\senya\.docker\machine\cache\boot2docker.iso to C:\Users\senya\.docker\machine\machines\swarm-2\boot2docker.iso...                                   
+(swarm-2) Creating VirtualBox VM...                                                                                                                                            
+(swarm-2) Creating SSH key...                                                                                                                                                  
+(swarm-2) Starting the VM...                                                                                                                                                   
+(swarm-2) Check network to re-create if needed...                                                                                                                              
+(swarm-2) Waiting for an IP...                                                                                                                                                 
+Waiting for machine to be running, this may take a few minutes...                                                                                                              
+Detecting operating system of created instance...                                                                                                                              
+Waiting for SSH to be available...                                                                                                                                             
+Detecting the provisioner...                                                                                                                                                   
+Provisioning with boot2docker...                                                                                                                                               
+Copying certs to the local machine directory...                                                                                                                                
+Copying certs to the remote machine...                                                                                                                                         
+Setting Docker configuration on the remote daemon...                                                                                                                           
+                                                                                                                                                                               
+This machine has been allocated an IP address, but Docker Machine could not                                                                                                    
+reach it successfully.                                                                                                                                                         
+                                                                                                                                                                               
+SSH for the machine should still work, but connecting to exposed ports, such as                                                                                                
+the Docker daemon port (usually <ip>:2376), may not work properly.                                                                                                             
+                                                                                                                                                                               
+You may need to add the route manually, or use another related workaround.                                                                                                     
+                                                                                                                                                                               
+This could be due to a VPN, proxy, or host file configuration issue.                                                                                                           
+                                                                                                                                                                               
+You also might want to clear any VirtualBox host only interfaces you are not using.                                                                                            
+Checking connection to Docker...                                                                                                                                               
+Docker is up and running!                                                                                                                                                      
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env swarm-2             
+Running pre-create checks...                                                                                                                                                   
+Creating machine...                                                                                                                                                            
+(swarm-3) Copying C:\Users\senya\.docker\machine\cache\boot2docker.iso to C:\Users\senya\.docker\machine\machines\swarm-3\boot2docker.iso...                                   
+(swarm-3) Creating VirtualBox VM...                                                                                                                                            
+(swarm-3) Creating SSH key...                                                                                                                                                  
+(swarm-3) Starting the VM...                                                                                                                                                   
+(swarm-3) Check network to re-create if needed...                                                                                                                              
+(swarm-3) Waiting for an IP...                                                                                                                                                 
+Waiting for machine to be running, this may take a few minutes...                                                                                                              
+Detecting operating system of created instance...                                                                                                                              
+Waiting for SSH to be available...                                                                                                                                             
+Detecting the provisioner...                                                                                                                                                   
+Provisioning with boot2docker...                                                                                                                                               
+Copying certs to the local machine directory...                                                                                                                                
+Copying certs to the remote machine...                                                                                                                                         
+Setting Docker configuration on the remote daemon...                                                                                                                           
+                                                                                                                                                                               
+This machine has been allocated an IP address, but Docker Machine could not                                                                                                    
+reach it successfully.                                                                                                                                                         
+                                                                                                                                                                               
+SSH for the machine should still work, but connecting to exposed ports, such as                                                                                                
+the Docker daemon port (usually <ip>:2376), may not work properly.                                                                                                             
+                                                                                                                                                                               
+You may need to add the route manually, or use another related workaround.                                                                                                     
+                                                                                                                                                                               
+This could be due to a VPN, proxy, or host file configuration issue.                                                                                                           
+                                                                                                                                                                               
+You also might want to clear any VirtualBox host only interfaces you are not using.                                                                                            
+Checking connection to Docker...                                                                                                                                               
+Docker is up and running!                                                                                                                                                      
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env swarm-3             
+Swarm initialized: current node (3yowgcf18dgfvpe3hr7hftn7w) is now a manager.                                                                                                  
+                                                                                                                                                                               
+To add a worker to this swarm, run the following command:                                                                                                                      
+                                                                                                                                                                               
+    docker swarm join --token SWMTKN-1-3ac4cbrckzb7dfm19skn62ob19t815afhuh8idt505s1y7d05a-1wkhhyzju9oedi94o2ea0esax 192.168.99.107:2377                                        
+                                                                                                                                                                               
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.                                                                             
+                                                                                                                                                                               
+This node joined a swarm as a worker.                                                                                                                                          
+This node joined a swarm as a worker.                                                                                                                                          
+16n4dazd91z03n00jdnah7r5f                                                                                                                                                      
+Since --detach=false was not specified, tasks will be created in the background.                                                                                               
+In a future release, --detach=false will become the default.                                                                                                                   
+                                                                                                                                                                               
+Simeon@LAPTOP-P0PO4U7C MSYS ~/source/docker-swarm-course/chapter-3/section-3.1/source (master)                                                                                 
+$   
+
+                                                                                                                                                                           
